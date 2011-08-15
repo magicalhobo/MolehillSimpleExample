@@ -7,6 +7,7 @@ package
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.display.TriangleCulling;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
@@ -17,7 +18,10 @@ package
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
+	
+	[SWF(frameRate="60")]
 	
 	public class MolehillSimpleExample extends Sprite
 	{
@@ -29,7 +33,7 @@ package
 		
 		private var originalWidth:uint;
 		private var originalHeight:uint;
-		
+
 		public function MolehillSimpleExample()
 		{
 			stage.align = StageAlign.TOP_LEFT;
@@ -39,8 +43,7 @@ package
 			originalHeight = stage.stageHeight;
 			
 			stage3D = stage.stage3Ds[0];
-			stage3D.viewPort = new Rectangle (0, 0, originalWidth, originalHeight); 
-			stage3D.addEventListener(Event.CONTEXT3D_CREATE, myContext3DHandler); 
+			stage3D.addEventListener(Event.CONTEXT3D_CREATE, context3DCreateHandler);
 			stage3D.requestContext3D(); 
 		}
 		
@@ -51,7 +54,7 @@ package
 			return assembler.agalcode;
 		}
 		
-		private function myContext3DHandler(event:Event):void
+		private function context3DCreateHandler(event:Event):void
 		{
 			context3D = stage3D.context3D;
 			
@@ -64,8 +67,8 @@ package
 			vertexBuffer = context3D.createVertexBuffer(3, 6);
 			vertexBuffer.uploadFromVector(Vector.<Number>([
 				-1, -1, 0, 1, 0, 0,
-				-1, 1, 0,  0, 1, 0,
-				1, -1, 0,  0, 0, 1]), 0, 3); 
+				-1,  1, 0, 0, 1, 0,
+				 1, -1, 0, 0, 0, 1]), 0, 3); 
 				
 			context3D.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
 			context3D.setVertexBufferAt(1, vertexBuffer, 3, Context3DVertexBufferFormat.FLOAT_3);
